@@ -14,7 +14,10 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "element-ui": "^2.0.8",
     "vue": "^2.5.2",
+    "vue-axios": "^2.0.2",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -78,6 +81,7 @@
     "sinon-chai": "^2.8.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
+    "vue-easytable": "^1.6.3",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",

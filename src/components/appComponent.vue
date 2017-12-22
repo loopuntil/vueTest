@@ -1,0 +1,151 @@
+
+<template src="./appComponent.html"></template>
+
+<script>
+const baseUrl = 'http://localhost:3000/api/hero'
+
+export default {
+  data () {
+    return {
+      heroId: '',
+      heroName: '',
+      data: [],
+      loading: false,
+      titles: [{
+        prop: 'id',
+        label: 'ID'
+      }, {
+        prop: 'name',
+        label: 'NAME'
+      }],
+      tableProps: {
+        border: false,
+        stripe: false,
+        defaultSort: {
+          prop: 'id',
+          order: 'asc'
+        }
+      },
+      actionColDef: {
+        label: 'Actions',
+        tableColProps: {
+          align: 'center'
+        },
+        def: [{
+          handler: row => {
+            // this.$message('Edit clicked')
+            // row.name = 'hello word'
+            this.dialogFormVisible = true
+            this.form.id = row.id
+            this.form.name = row.name
+          },
+          buttonProps: {
+            type: 'primary'
+          },
+          name: 'Edit'
+        }, {
+          buttonProps: {
+            type: 'primary'
+          },
+          handler: row => {
+            this.confirmRemove(row.id)
+          },
+          name: 'Remove'
+        }]
+      },
+      dialogFormVisible: false,
+      form: {
+        id: '',
+        name: ''
+      },
+      formLabelWidth: '120px'
+    }
+  },
+  created: function () {
+    this.query()
+  },
+  methods: {
+    query () {
+      this.loading = true
+      this.data = this.axios.get(baseUrl).then(response => {
+        this.data = response.data
+        this.loading = false
+      }).catch(error => {
+        this.$message(error)
+        this.loading = false
+      })
+    },
+    dataValidationFailed () {
+      let message = ''
+      if (this.heroId.trim() === '') {
+        message += 'ID not entered! '
+      }
+      if (this.heroName.trim() === '') {
+        message += 'NAME not entered! '
+      }
+      if (message !== '') {
+        this.$message(message)
+        return true
+      }
+      return false
+    },
+    add () {
+      if (this.dataValidationFailed()) {
+        return
+      }
+      this.axios.post(baseUrl, {id: this.heroId, name: this.heroName}).then(success => {
+        let message = 'Insert success!'
+        let type = 'success'
+        if (!success) {
+          message = 'Insert Error!'
+          type = 'warning'
+        }
+        this.$message({message: message, type: type})
+        this.heroId = ''
+        this.heroName = ''
+        this.query()
+      })
+    },
+    save () {
+      if (this.form.id && this.form.name) {
+        const id = this.form.id
+        const name = this.form.name
+        this.axios.put(baseUrl + '/' + id, {name: name}).then(success => {
+          if (!success) {
+            this.$message('Edit Error')
+          }
+          this.form.id = ''
+          this.form.name = ''
+          this.dialogFormVisible = false
+          this.query()
+        })
+      }
+    },
+    confirmRemove (id) {
+      this.$confirm('Do you want to remove the hero?')
+          .then(_ => {
+            this.remove(id)
+          })
+          .catch(_ => {})
+    },
+    remove (id) {
+      this.axios.delete(baseUrl + '/' + id).then(success => {
+        if (!success) {
+          this.$message('Edit Error')
+        }
+        this.query()
+      })
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.demo-input-label {
+  width: 300px;
+}
+.left {
+  text-align: left;
+}
+</style>

@@ -1,0 +1,36 @@
+<div>
+  <div class="demo-input-label">
+    <h3 class="left">ID</h3>
+    <el-input placeholder="Please enter id" v-model="heroId">
+    </el-input>
+
+    <h3 class="left">NAME</h3>
+    <el-input placeholder="Please enter name" v-model="heroName">
+    </el-input>
+    <h3 class="left">
+      <el-button type="primary" @click="add()">Add</el-button>
+    </h3>
+  </div>
+  <h3>Hero List</h3>
+
+  <data-tables :data="data" :table-props="tableProps" :action-col-def="actionColDef" v-loading="loading">
+    <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label" :key="title.label" sortable="custom">
+    </el-table-column>
+  </data-tables>
+
+  <el-dialog title="Hero Details" :visible.sync="dialogFormVisible" width="600px">
+    <el-form :model="form">
+      <el-form-item label="ID" :label-width="formLabelWidth">
+        <el-input v-model="form.id" :disabled="true" size="small"></el-input>
+      </el-form-item>
+      <el-form-item label="NAME" :label-width="formLabelWidth">
+        <el-input v-model="form.name" size="small"></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="save()">Save</el-button>
+      <el-button @click="dialogFormVisible = false">Cancel</el-button>
+    </span>
+  </el-dialog>
+
+</div>
