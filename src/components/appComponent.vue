@@ -70,9 +70,9 @@ export default {
       this.loading = true
       this.axios.get(baseUrl).then(response => {
         this.data = response.data
-        this.loading = false
       }).catch(error => {
         this.$message(error)
+      }).finally(() => {
         this.loading = false
       })
     },
