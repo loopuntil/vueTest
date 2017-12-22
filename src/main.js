@@ -11,7 +11,9 @@ import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import service from './service'
 
+Vue.use(service)
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 

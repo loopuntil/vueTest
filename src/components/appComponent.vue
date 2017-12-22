@@ -62,12 +62,13 @@ export default {
     }
   },
   created: function () {
+    console.log('version:' + this.service.getVersion())
     this.query()
   },
   methods: {
     query () {
       this.loading = true
-      this.data = this.axios.get(baseUrl).then(response => {
+      this.axios.get(baseUrl).then(response => {
         this.data = response.data
         this.loading = false
       }).catch(error => {
