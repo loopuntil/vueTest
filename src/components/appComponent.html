@@ -1,6 +1,8 @@
+<!--因為一個template 只能有一個root，所以最外面用一個div包起來-->
 <div>
   <div class="demo-input-label">
     <h3 class="left">ID</h3>
+    <!-- v-mode是將value與變數做雙向綁定 -->
     <el-input placeholder="Please enter id" v-model="heroId">
     </el-input>
 
@@ -12,12 +14,23 @@
     </h3>
   </div>
   <h3>Hero List</h3>
-
-  <data-tables :data="data" :table-props="tableProps" :action-col-def="actionColDef" v-loading="loading">
+<!--
+  data : 要放到datatable的陣列，綁定data變數
+  pagination-def : 設定分頁屬性，前面加:代表與變數綁定，是 v-bind的簡寫
+  table-props :　設定ｔａｂｌｅ格式與預設排序
+  action-col-def : 設定列ａｃｔｉｏｎ的格式與動作
+　v-loading : loading動畫，前面沒有：因為這是指令，不單只是ｄａｔａＴａｂｌｅ的屬性
+-->
+  <data-tables :data="data" :pagination-def="paginationDef" :table-props="tableProps" :action-col-def="actionColDef" v-loading="loading">
+    <!--
+      titles變數設定要顯示的ｌａｂｌｅ與對應的ｋｅｙ，後面的設定照抄就對了
+    -->
     <el-table-column v-for="title in titles" :prop="title.prop" :label="title.label" :key="title.label" sortable="custom">
     </el-table-column>
   </data-tables>
-
+  <!--
+    :visible.sync="dialogFormVisible" <--綁定dialogFormVisible控制dialog是否顯示
+  -->
   <el-dialog title="Hero Details" :visible.sync="dialogFormVisible" width="600px">
     <el-form :model="form">
       <el-form-item label="ID" :label-width="formLabelWidth">
@@ -28,6 +41,7 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
+      <!-- @click是v-on:click的簡寫 -->
       <el-button type="primary" @click="save()">Save</el-button>
       <el-button @click="dialogFormVisible = false">Cancel</el-button>
     </span>

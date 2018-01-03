@@ -6,10 +6,16 @@ const baseUrl = 'http://localhost:3000/api/hero'
 
 export default {
   data () {
+    // return物件裡面的變數會與view繫結，當變數值改變時，view也會跟著改變
     return {
       heroId: '',
       heroName: '',
       data: [],
+      paginationDef: {
+        pageSize: 10,
+        pageSizes: [10, 20, 30],
+        currentPage: 1
+      },
       loading: false,
       titles: [{
         prop: 'id',
@@ -19,15 +25,13 @@ export default {
         label: 'NAME'
       }],
       tableProps: {
-        border: false,
-        stripe: false,
         defaultSort: {
           prop: 'id',
           order: 'asc'
         }
       },
       actionColDef: {
-        label: 'Actions',
+        label: 'Action',
         tableColProps: {
           align: 'center'
         },
@@ -62,12 +66,14 @@ export default {
     }
   },
   created: function () {
+    // 當vue實體化後，先執行的方法，這邊只是印出版本資訊跟執行查詢
     console.log('version:' + this.service.getVersion())
     this.query()
   },
   methods: {
     query () {
       this.loading = true
+      // 因為main前面有加Vue.use(VueAxios, axios)，所以axios可以直接使用，否則要import
       this.axios.get(baseUrl).then(response => {
         this.data = response.data
       }).catch(error => {

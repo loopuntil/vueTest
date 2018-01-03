@@ -3,6 +3,7 @@
     <!--
     <img src="./assets/logo.png">
     -->
+    <!--router-view ，顧名思義就是透過router產生view在這個標籤，實際上也是-->
     <router-view/>
   </div>
 </template>
