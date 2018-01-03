@@ -67,7 +67,31 @@ export default {
   },
   created: function () {
     // 當vue實體化後，先執行的方法，這邊只是印出版本資訊跟執行查詢
+    // 要保存this不然在執行axios api時this會跑掉
+    let self = this
+    // 印出版本資訊
     console.log('version:' + this.service.getVersion())
+    // 新增request攔截器
+    this.axios.interceptors.request.use(function (config) {
+      // 在送出請求前先載入動畫
+      self.loading = true
+      return config
+    }, function (error) {
+      // 錯誤處理，可以將全域的錯誤處理集中在一個地方
+      self.loading = false
+      self.$message('request error!')
+      return Promise.reject(error)
+    })
+    // 增加 response攔截器，無論成功或失敗都取消動畫，但是失敗會送出error message，
+    this.axios.interceptors.response.use(function (response) {
+      self.loading = false
+      return response
+    }, function (error) {
+      self.loading = false
+      self.$message('response error!')
+      return Promise.reject(error)
+    })
+
     this.query()
   },
   methods: {
@@ -76,10 +100,6 @@ export default {
       // 因為main前面有加Vue.use(VueAxios, axios)，所以axios可以直接使用，否則要import
       this.axios.get(baseUrl).then(response => {
         this.data = response.data
-      }).catch(error => {
-        this.$message(error)
-      }).finally(() => {
-        this.loading = false
       })
     },
     dataValidationFailed () {
